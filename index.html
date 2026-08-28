@@ -1,0 +1,661 @@
+<meta charset="utf-8">
+<title>Afternoon Crew Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700;800&display=swap">
+<style>
+  :root{
+    --green:#0f7d3e;
+    --green-deep:#0a5c2e;
+    --green-ink:#06381d;
+    --gold:#fbb324;
+    --gold-soft:#ffd977;
+    --paper:#ffffff;
+    --paper-tint:#f1f7f2;
+    --ink:#123a22;
+    --ink-soft:#3d5c48;
+    --no-red:#d5493a;
+    --no-red-tint:#fdeeec;
+    --yes-tint:#eaf6ee;
+    --display:'Anton', 'Arial Narrow', Impact, sans-serif;
+    --body:'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    font-family:var(--body);
+    background:linear-gradient(160deg, var(--green) 0%, var(--green-deep) 60%, var(--green-ink) 100%);
+    color:var(--paper);
+    overflow:hidden;
+  }
+  #deck{position:fixed; inset:0; overflow:hidden;}
+
+  /* ---------- decorative star field ---------- */
+  #starfield{position:absolute; inset:0; pointer-events:none; z-index:0;}
+  #starfield svg{position:absolute; opacity:.10;}
+  #starfield svg polygon{fill:var(--gold);}
+
+  /* ---------- slides ---------- */
+  .slide{
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    opacity:0; visibility:hidden;
+    transform:translateX(5%);
+    transition:opacity .5s ease, transform .5s ease, visibility 0s linear .5s;
+    z-index:1;
+  }
+  .slide.before{transform:translateX(-5%);}
+  .slide.active{
+    opacity:1; visibility:visible; transform:none;
+    transition:opacity .5s ease, transform .5s ease;
+    z-index:2;
+  }
+  .wrap{
+    width:min(1120px, 92vw);
+    max-height:100dvh;
+    overflow-y:auto;
+    padding:clamp(20px, 4vh, 48px) 8px clamp(72px, 10vh, 96px);
+  }
+
+  /* ---------- type ---------- */
+  .eyebrow{
+    font-weight:800; text-transform:uppercase;
+    letter-spacing:.22em; font-size:clamp(.72rem, 1.4vw, .95rem);
+    color:var(--gold);
+    display:flex; align-items:center; gap:.6em;
+    margin-bottom:clamp(10px, 2vh, 20px);
+  }
+  .eyebrow::before{content:""; width:34px; height:4px; background:var(--gold); border-radius:2px;}
+  h1,h2{
+    font-family:var(--display);
+    font-weight:400;
+    text-transform:uppercase;
+    line-height:.98;
+    text-wrap:balance;
+    letter-spacing:.01em;
+  }
+  h1{font-size:clamp(3rem, 10.5vw, 7.2rem); color:var(--paper);}
+  h2{font-size:clamp(2.1rem, 5.6vw, 4rem); color:var(--paper); margin-bottom:clamp(14px, 3vh, 28px);}
+  h2 .gold, h1 .gold{color:var(--gold);}
+  .lead{
+    font-size:clamp(1.05rem, 2.2vw, 1.45rem);
+    font-weight:500; line-height:1.45;
+    color:#eaf4ec; max-width:36em;
+  }
+  .lead strong{color:var(--gold); font-weight:800;}
+
+  /* ---------- fragments ---------- */
+  .frag{opacity:0; transform:translateY(20px); transition:opacity .45s ease, transform .45s ease;}
+  .frag.on{opacity:1; transform:none;}
+
+  /* ---------- title slide ---------- */
+  #s-title .wrap{text-align:center;}
+  .logo-chip{
+    display:inline-block; background:var(--paper);
+    border-radius:16px; padding:16px 26px 12px;
+    box-shadow:0 12px 34px rgba(0,0,0,.28);
+    margin-bottom:clamp(18px, 4vh, 36px);
+  }
+  .logo-chip img{width:clamp(170px, 24vw, 260px); display:block;}
+  #s-title h1{margin:6px 0 14px;}
+  #s-title .lead{margin:0 auto;}
+  .bigstar{
+    width:clamp(52px, 7vw, 84px); margin:0 auto clamp(8px,1.5vh,14px);
+    animation:starPop 1s ease .2s both, starSpin 14s linear 1.2s infinite;
+  }
+  .bigstar polygon{fill:var(--gold);}
+  @keyframes starPop{from{transform:scale(0) rotate(-120deg); opacity:0;} to{transform:scale(1) rotate(0); opacity:1;}}
+  @keyframes starSpin{from{transform:rotate(0);} to{transform:rotate(360deg);}}
+  .hint{
+    margin-top:clamp(20px, 4vh, 40px);
+    font-size:.95rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+    color:rgba(255,255,255,.75);
+  }
+  .hint kbd{
+    background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.35);
+    border-radius:6px; padding:2px 9px; font-family:var(--body); font-weight:700;
+  }
+
+  /* ---------- timeline slide ---------- */
+  .timeline{
+    display:flex; flex-wrap:wrap; gap:14px 10px;
+    align-items:stretch; margin-top:clamp(10px,2vh,18px);
+  }
+  .stop{
+    flex:1 1 150px; min-width:150px;
+    background:var(--paper); color:var(--ink);
+    border-radius:14px; padding:16px 16px 18px;
+    position:relative;
+    box-shadow:0 8px 22px rgba(0,0,0,.22);
+  }
+  .stop .n{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:30px; height:30px; border-radius:50%;
+    background:var(--gold); color:var(--green-ink);
+    font-weight:800; font-size:.95rem; margin-bottom:10px;
+  }
+  .stop.gold-card{background:var(--gold); color:var(--green-ink);}
+  .stop.gold-card .n{background:var(--green-ink); color:var(--gold);}
+  .stop h3{font-size:1.02rem; font-weight:800; line-height:1.2; margin-bottom:5px; text-transform:uppercase; letter-spacing:.03em;}
+  .stop p{font-size:.88rem; line-height:1.35; color:var(--ink-soft); font-weight:500;}
+  .stop.gold-card p{color:#4d3a05;}
+
+  /* ---------- rule cards (do / don't) ---------- */
+  .cards{display:grid; gap:14px; margin-top:clamp(8px,2vh,16px);}
+  .cards.three{grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));}
+  .cards.four{grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));}
+  .rule{
+    background:var(--paper); color:var(--ink);
+    border-radius:14px; padding:18px;
+    display:flex; gap:14px; align-items:flex-start;
+    box-shadow:0 8px 22px rgba(0,0,0,.22);
+  }
+  .rule .badge{
+    flex:0 0 auto; width:42px; height:42px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.35rem; font-weight:800;
+  }
+  .rule.no .badge{background:var(--no-red-tint); color:var(--no-red);}
+  .rule.yes .badge{background:var(--yes-tint); color:var(--green);}
+  .rule h3{font-size:1.05rem; font-weight:800; margin-bottom:4px; line-height:1.25;}
+  .rule p{font-size:.9rem; line-height:1.4; color:var(--ink-soft); font-weight:500;}
+
+  .callout{
+    margin-top:clamp(14px,3vh,24px);
+    background:rgba(255,255,255,.10);
+    border-left:5px solid var(--gold);
+    border-radius:0 12px 12px 0;
+    padding:14px 20px;
+    font-size:clamp(1rem, 2vw, 1.3rem); font-weight:600; line-height:1.45;
+    max-width:44em;
+  }
+  .callout strong{color:var(--gold);}
+
+  /* ---------- do/don't panels + rule strips ---------- */
+  .duo{display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:14px; margin-top:clamp(8px,2vh,16px);}
+  .panel{background:var(--paper); color:var(--ink); border-radius:14px; padding:16px 18px; box-shadow:0 8px 22px rgba(0,0,0,.22);}
+  .panel h3{font-size:.85rem; font-weight:800; text-transform:uppercase; letter-spacing:.16em; margin-bottom:10px;}
+  .panel.do h3{color:var(--green);}
+  .panel.dont h3{color:var(--no-red);}
+  .panel ul{list-style:none; display:flex; flex-direction:column; gap:9px;}
+  .panel li{display:flex; gap:9px; align-items:flex-start; font-weight:600; font-size:clamp(.9rem, 1.8vw, 1.05rem); line-height:1.4;}
+  .panel.do li::before{content:"✓"; color:var(--green); font-weight:800;}
+  .panel.dont li::before{content:"✗"; color:var(--no-red); font-weight:800;}
+  .strip{margin-top:12px; border-radius:12px; padding:13px 18px; font-weight:700; font-size:clamp(.95rem, 1.9vw, 1.15rem); line-height:1.45;}
+  .strip.deadline{background:var(--gold); color:var(--green-ink);}
+  .strip.consequence{background:#fdf1ef; color:#5c1f17; border-left:5px solid var(--no-red);}
+
+  /* ---------- goal checkpoints ---------- */
+  .checks{display:flex; flex-direction:column; gap:14px; margin-top:clamp(10px,2vh,18px); max-width:640px;}
+  .check{
+    display:flex; align-items:center; gap:16px;
+    background:var(--paper); color:var(--ink);
+    border-radius:14px; padding:16px 20px;
+    box-shadow:0 8px 22px rgba(0,0,0,.22);
+    font-size:clamp(1.05rem, 2.2vw, 1.35rem); font-weight:700;
+  }
+  .check .badge{
+    flex:0 0 auto; width:44px; height:44px; border-radius:50%;
+    background:var(--yes-tint); color:var(--green);
+    display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:800;
+  }
+
+  /* ---------- freeze slide ---------- */
+  .ball-stage{height:clamp(110px, 18vh, 170px); position:relative; margin:clamp(6px,1.5vh,14px) 0;}
+  .ball{
+    position:absolute; left:6px; bottom:0;
+    font-size:clamp(3rem, 7vw, 4.6rem); line-height:1;
+    animation:bounce .7s cubic-bezier(.35,0,.65,1) infinite alternate;
+    transform-origin:bottom center;
+  }
+  @keyframes bounce{
+    from{transform:translateY(0) scaleY(.94);}
+    to{transform:translateY(calc(-1 * clamp(60px, 12vh, 110px))) scaleY(1);}
+  }
+  .ball-stage.held .ball{animation:none; transform:none;}
+  .ball-stage .play-tag{
+    position:absolute; left:clamp(76px, 10vw, 120px); bottom:14px;
+    background:rgba(255,255,255,.14); border:1.5px solid rgba(255,255,255,.35); color:var(--paper);
+    font-weight:800; text-transform:uppercase; letter-spacing:.08em;
+    padding:8px 16px; border-radius:999px; font-size:clamp(.85rem, 1.6vw, 1.05rem);
+    opacity:1; transition:opacity .4s;
+  }
+  .ball-stage.held .play-tag{opacity:0;}
+  .ball-stage .held-tag{
+    position:absolute; left:clamp(76px, 10vw, 120px); bottom:14px;
+    background:var(--gold); color:var(--green-ink);
+    font-weight:800; text-transform:uppercase; letter-spacing:.08em;
+    padding:8px 16px; border-radius:999px; font-size:clamp(.85rem, 1.6vw, 1.05rem);
+    opacity:0; transform:translateY(10px); transition:opacity .4s, transform .4s;
+  }
+  .ball-stage.held .held-tag{opacity:1; transform:none;}
+
+  /* ---------- ready vs tardy ---------- */
+  .versus{display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-top:clamp(10px,2vh,18px);}
+  .vcard{
+    border-radius:16px; padding:22px;
+    box-shadow:0 10px 26px rgba(0,0,0,.25);
+  }
+  .vcard.ready{background:var(--paper); color:var(--ink);}
+  .vcard.tardy{background:#fdf1ef; color:#5c1f17; border:2px solid var(--no-red);}
+  .vcard .tag{
+    display:inline-block; font-family:var(--display); text-transform:uppercase;
+    font-size:clamp(1.4rem, 3vw, 2rem); letter-spacing:.03em;
+    padding:2px 14px; border-radius:8px; margin-bottom:12px;
+  }
+  .vcard.ready .tag{background:var(--green); color:var(--paper);}
+  .vcard.tardy .tag{background:var(--no-red); color:var(--paper);}
+  .vcard ul{list-style:none; display:flex; flex-direction:column; gap:9px;}
+  .vcard li{display:flex; gap:10px; align-items:flex-start; font-size:clamp(.95rem, 1.9vw, 1.15rem); font-weight:600; line-height:1.35;}
+  .vcard.ready li::before{content:"✓"; color:var(--green); font-weight:800;}
+  .vcard.tardy li::before{content:"✗"; color:var(--no-red); font-weight:800;}
+
+  /* ---------- quick check flip cards ---------- */
+  .qc-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:14px; margin-top:clamp(8px,2vh,16px);}
+  .qc{perspective:1100px; min-height:172px;}
+  .qc button{
+    width:100%; height:100%; min-height:172px;
+    position:relative; cursor:pointer;
+    border:0; background:none; padding:0;
+    font-family:var(--body); text-align:left;
+    transform-style:preserve-3d;
+    transition:transform .55s cubic-bezier(.4,0,.2,1);
+  }
+  .qc.flipped button{transform:rotateY(180deg);}
+  .qc .face{
+    position:absolute; inset:0;
+    backface-visibility:hidden;
+    border-radius:14px; padding:16px 18px;
+    display:flex; flex-direction:column; gap:8px; justify-content:space-between;
+  }
+  .qc .front{
+    background:rgba(255,255,255,.10);
+    border:1.5px solid rgba(255,255,255,.30);
+    color:var(--paper);
+  }
+  .qc .front .scenario{font-size:.98rem; font-weight:600; line-height:1.4;}
+  .qc .front .tap{
+    font-size:.72rem; font-weight:800; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--gold);
+  }
+  .qc .back{
+    background:var(--paper); color:var(--ink);
+    transform:rotateY(180deg);
+    justify-content:flex-start;
+    box-shadow:0 10px 26px rgba(0,0,0,.3);
+  }
+  .qc .verdict{font-size:1.15rem; font-weight:800; display:flex; align-items:center; gap:8px;}
+  .qc .back.ok .verdict{color:var(--green);}
+  .qc .back.nope .verdict{color:var(--no-red);}
+  .qc .why{font-size:.88rem; font-weight:500; line-height:1.4; color:var(--ink-soft);}
+  .qc button:focus-visible{outline:3px solid var(--gold); outline-offset:3px; border-radius:14px;}
+
+  /* ---------- sendoff ---------- */
+  .sendoff{text-align:center; margin-top:clamp(18px,4vh,34px);}
+  .sendoff-line{font-family:var(--display); text-transform:uppercase; letter-spacing:.01em; font-size:clamp(1.7rem, 4.5vw, 3rem); line-height:1.05; color:var(--paper);}
+  .sendoff-line .gold{color:var(--gold);}
+  .motto{
+    margin-top:12px;
+    font-weight:800; text-transform:uppercase; letter-spacing:.24em;
+    color:var(--gold); font-size:clamp(.85rem, 1.8vw, 1.1rem);
+    display:flex; align-items:center; justify-content:center; gap:14px;
+  }
+  .motto::before, .motto::after{content:""; width:44px; height:3px; background:var(--gold); border-radius:2px;}
+
+  /* ---------- HUD ---------- */
+  #progress{
+    position:fixed; top:0; left:0; height:5px; z-index:10;
+    background:var(--gold); width:0%;
+    transition:width .4s ease;
+  }
+  #hud{
+    position:fixed; left:0; right:0; bottom:0; z-index:10;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 22px;
+    pointer-events:none;
+  }
+  #counter{
+    font-weight:800; font-size:.85rem; letter-spacing:.12em;
+    color:rgba(255,255,255,.75); font-variant-numeric:tabular-nums;
+  }
+  #dots{display:flex; gap:8px; pointer-events:auto;}
+  #dots button{
+    width:11px; height:11px; border-radius:50%;
+    border:0; padding:0; cursor:pointer;
+    background:rgba(255,255,255,.35);
+    transition:transform .2s, background .2s;
+  }
+  #dots button.on{background:var(--gold); transform:scale(1.3);}
+  #dots button:focus-visible{outline:2px solid var(--gold); outline-offset:2px;}
+  #navbtns{display:flex; gap:10px; pointer-events:auto;}
+  #navbtns button{
+    width:44px; height:44px; border-radius:50%;
+    border:1.5px solid rgba(255,255,255,.4);
+    background:rgba(255,255,255,.10); color:var(--paper);
+    font-size:1.2rem; font-weight:800; cursor:pointer;
+    transition:background .2s, transform .15s;
+  }
+  #navbtns button:hover{background:var(--gold); color:var(--green-ink); transform:scale(1.06);}
+  #navbtns button:focus-visible{outline:3px solid var(--gold); outline-offset:2px;}
+
+  @media (max-width:640px){
+    #dots{display:none;}
+    .wrap{padding-bottom:88px;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .slide, .frag, .qc button, #progress, .bigstar{transition:none !important; animation:none !important;}
+    .ball{animation:none;}
+  }
+</style>
+
+<div id="deck">
+  <div id="starfield" aria-hidden="true"></div>
+
+  <!-- 1 · TITLE -->
+  <section class="slide" id="s-title">
+    <div class="wrap">
+      <div class="logo-chip"><img src="data:image/png;base64,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" alt="Lodestar — A Lighthouse Community Public School"></div>
+      <svg class="bigstar" viewBox="0 0 100 100" aria-hidden="true"><polygon data-star="50,50,7,48,22"></polygon></svg>
+      <h1>Afternoon <span class="gold">Crew</span></h1>
+      <p class="lead">How we move: transitions, check-in, and recess — done right, every day.</p>
+      <p class="hint">Press <kbd>→</kbd> or click to move forward</p>
+    </div>
+  </section>
+
+  <!-- 2 · THE MAP -->
+  <section class="slide" id="s-map">
+    <div class="wrap">
+      <p class="eyebrow">The Big Picture</p>
+      <h2>Your afternoon, <span class="gold">stop by stop</span></h2>
+      <p class="lead" style="margin-bottom:clamp(10px,2vh,18px);">A transition is the few minutes you get to move from one place to the next. Your afternoon has <strong>two</strong>: into crew, and into 6th period.</p>
+      <div class="timeline">
+        <div class="stop"><span class="n">1</span><h3>Class ends</h3><p>Class gets out. Your transition time starts now.</p></div>
+        <div class="stop"><span class="n">2</span><h3>Straight to crew</h3><p>No stops, no detours. Go right to your crew and check in.</p></div>
+        <div class="stop"><span class="n">3</span><h3>Crew outside</h3><p>Everyone checked in? Your crew heads outside — before the transition bell rings.</p></div>
+        <div class="stop gold-card"><span class="n">4</span><h3>Crew recess</h3><p>Your time: friends, water, bathroom, talking to teachers.</p></div>
+        <div class="stop"><span class="n">5</span><h3>Straight to 6th</h3><p>Recess ends and everything stops. Walk straight to 6th period.</p></div>
+        <div class="stop"><span class="n">6</span><h3>Ready to go</h3><p>In your seat, materials out, before the 6th-period bell rings.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · TRANSITION INTO CREW -->
+  <section class="slide" id="s-intocrew">
+    <div class="wrap">
+      <p class="eyebrow">Transition · Into Crew</p>
+      <h2>Straight to crew. <span class="gold">Check in.</span></h2>
+      <div class="duo">
+        <div class="panel do">
+          <h3>Do</h3>
+          <ul>
+            <li>Go directly to your crew — no stops, no detours</li>
+            <li>Check in so your crew knows you're there</li>
+            <li>Go outside with your crew once everyone is checked in</li>
+          </ul>
+        </div>
+        <div class="panel dont">
+          <h3>Don't</h3>
+          <ul>
+            <li>Walk friends to their crew — you'll see them at recess</li>
+            <li>Go to the bathroom — bathroom time is recess</li>
+            <li>Stop to talk to teachers — teachers are around at recess</li>
+          </ul>
+        </div>
+      </div>
+      <div class="strip deadline">The deadline: before the <strong>transition bell</strong> rings, every crew member is checked in and your whole crew is outside.</div>
+      <div class="strip consequence">If even one crew member isn't checked in when the transition bell rings: <strong>no outside recess that day</strong>, and the crew completes a <strong>crew reflection</strong> — talk about what went wrong, make a plan to fix it.</div>
+    </div>
+  </section>
+
+  <!-- 4 · RECESS = YOUR TIME -->
+  <section class="slide" id="s-recess">
+    <div class="wrap">
+      <p class="eyebrow">Crew Recess</p>
+      <h2>This is <span class="gold">your</span> time</h2>
+      <div class="cards four">
+        <div class="rule yes"><span class="badge">✓</span><div><h3>Hang out with friends</h3><p>This is your time to see and catch up with your friends.</p></div></div>
+        <div class="rule yes"><span class="badge">✓</span><div><h3>Go to the bathroom</h3><p>Go now — there's no bathroom stop on the way to 6th period.</p></div></div>
+        <div class="rule yes"><span class="badge">✓</span><div><h3>Get water</h3><p>Drink water and fill your bottle now — no water stops on the way to 6th period.</p></div></div>
+        <div class="rule yes"><span class="badge">✓</span><div><h3>Talk to teachers</h3><p>Questions, make-up work, a quick conversation — now's the time.</p></div></div>
+      </div>
+      <div class="callout">All the things you <strong>can't</strong> do during transitions? Recess is exactly when you do them.</div>
+    </div>
+  </section>
+
+  <!-- 5 · RECESS ENDS → INTO 6TH -->
+  <section class="slide" id="s-into6">
+    <div class="wrap">
+      <p class="eyebrow">Recess Ends · Transition Into 6th Period</p>
+      <h2>Everything <span class="gold">stops</span> — walk to 6th</h2>
+      <p class="lead">The moment recess ends: all activity stops and <strong>all balls are held</strong>. A ball bounced during this transition gets <strong>confiscated — a teacher takes it away</strong>.</p>
+      <div class="ball-stage" id="ballStage" style="height:clamp(90px, 13vh, 130px);">
+        <span class="ball" aria-hidden="true">🏀</span>
+        <span class="play-tag">During recess: play all you want</span>
+        <span class="held-tag">Recess over: held, not bounced</span>
+      </div>
+      <div class="cards three">
+        <div class="rule no"><span class="badge">✗</span><div><h3>No water stops</h3><p>Water happens at recess. Go straight to class.</p></div></div>
+        <div class="rule no"><span class="badge">✗</span><div><h3>No bathroom stops</h3><p>Bathroom too — that was recess. Go straight to class.</p></div></div>
+        <div class="rule no"><span class="badge">✗</span><div><h3>Don't walk friends to class</h3><p>Your friends can get to their class on their own. Go straight to yours.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 · READY VS TARDY -->
+  <section class="slide" id="s-ready">
+    <div class="wrap">
+      <p class="eyebrow">The 6th-Period Bell Rings — Which One Are You?</p>
+      <h2>Ready <span class="gold">vs.</span> tardy</h2>
+      <div class="versus">
+        <div class="vcard ready">
+          <span class="tag">Ready</span>
+          <ul>
+            <li>In your seat</li>
+            <li>Materials out on your desk</li>
+            <li>Ready to start when the 6th-period bell rings</li>
+          </ul>
+        </div>
+        <div class="vcard tardy">
+          <span class="tag">Tardy (Late)</span>
+          <ul>
+            <li>Still in the hallway</li>
+            <li>In your seat but your materials are not out</li>
+            <li><span>Sitting in your seat chatting when the 6th-period bell rings <strong>(yes, that is tardy)</strong></span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout">Being in the room isn't the same as being <strong>ready</strong>. Seat + materials out + done talking = on time.</div>
+    </div>
+  </section>
+
+  <!-- 7 · QUICK CHECK -->
+  <section class="slide" id="s-quiz">
+    <div class="wrap" data-noadv>
+      <p class="eyebrow">Quick Check</p>
+      <h2>Did they <span class="gold">get it right?</span></h2>
+      <div class="qc-grid">
+        <div class="qc"><button type="button" data-noadv>
+          <span class="face front"><span class="scenario">Class gets out and transition starts. Jayden walks his friend to her crew first, <em>then</em> heads to his own.</span><span class="tap">Tap to reveal</span></span>
+          <span class="face back nope"><span class="verdict">✗ Nope</span><span class="why">Straight to your own crew — you'll see friends at recess.</span></span>
+        </button></div>
+        <div class="qc"><button type="button" data-noadv>
+          <span class="face front"><span class="scenario">Maya's whole crew is checked in and outside before the transition bell rings.</span><span class="tap">Tap to reveal</span></span>
+          <span class="face back ok"><span class="verdict">✓ That's it</span><span class="why">That's the goal, exactly. Crew recess: earned.</span></span>
+        </button></div>
+        <div class="qc"><button type="button" data-noadv>
+          <span class="face front"><span class="scenario">During crew recess, Andre gets water, uses the bathroom, and talks to his math teacher.</span><span class="tap">Tap to reveal</span></span>
+          <span class="face back ok"><span class="verdict">✓ Perfect</span><span class="why">Recess is built for exactly those three things.</span></span>
+        </button></div>
+        <div class="qc"><button type="button" data-noadv>
+          <span class="face front"><span class="scenario">Recess ends. Leila keeps bouncing her ball while walking in.</span><span class="tap">Tap to reveal</span></span>
+          <span class="face back nope"><span class="verdict">✗ Ball's gone</span><span class="why">When recess ends, balls are held. Bounce it and a teacher takes it away.</span></span>
+        </button></div>
+        <div class="qc"><button type="button" data-noadv>
+          <span class="face front"><span class="scenario">Right when class ends, Amara goes straight to crew and checks in.</span><span class="tap">Tap to reveal</span></span>
+          <span class="face back ok"><span class="verdict">✓ Exactly</span><span class="why">Check in with your crew first — everything else waits for recess.</span></span>
+        </button></div>
+        <div class="qc"><button type="button" data-noadv>
+          <span class="face front"><span class="scenario">The 6th-period bell rings. Marcus is in his seat, chatting, with nothing out on his desk.</span><span class="tap">Tap to reveal</span></span>
+          <span class="face back nope"><span class="verdict">✗ Tardy</span><span class="why">Two problems: nothing out on his desk AND chatting when the 6th-period bell rings. Either one counts as tardy.</span></span>
+        </button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · THE TAKEAWAY -->
+  <section class="slide" id="s-recap">
+    <div class="wrap">
+      <p class="eyebrow">The Takeaway</p>
+      <h2>Three things to <span class="gold">remember</span></h2>
+      <div class="checks">
+        <div class="check"><span class="badge" style="background:var(--gold); color:var(--green-ink); font-size:1.05rem;">1</span><span><strong>Afternoon Crew transition.</strong> Make it before the transition bell — or you don't get to go outside at all.</span></div>
+        <div class="check"><span class="badge" style="background:var(--gold); color:var(--green-ink); font-size:1.05rem;">2</span><span><strong>Crew recess = everything else.</strong> Friends, bathroom, water, talking to teachers.</span></div>
+        <div class="check"><span class="badge" style="background:var(--gold); color:var(--green-ink); font-size:1.05rem;">3</span><span><strong>6th-period bell = in your seat.</strong> Materials out, done talking — or you're tardy.</span></div>
+      </div>
+      <div class="sendoff">
+        <p class="sendoff-line">Crew takes care of <span class="gold">crew</span></p>
+        <p class="motto">Where Oakland Shines</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- HUD -->
+  <div id="progress"></div>
+  <div id="hud">
+    <span id="counter">1 / 12</span>
+    <nav id="dots" aria-label="Slides"></nav>
+    <div id="navbtns">
+      <button type="button" id="btnPrev" aria-label="Previous">←</button>
+      <button type="button" id="btnNext" aria-label="Next">→</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var dotsNav = document.getElementById('dots');
+  var counter = document.getElementById('counter');
+  var progress = document.getElementById('progress');
+  var cur = 0;
+
+  // ----- 7-point stars (logo motif), generated not hand-drawn -----
+  function starPoints(cx, cy, n, R, r){
+    var pts = [];
+    for (var i = 0; i < 2 * n; i++){
+      var rad = (i % 2 === 0) ? R : r;
+      var a = -Math.PI / 2 + i * Math.PI / n;
+      pts.push((cx + rad * Math.cos(a)).toFixed(2) + ',' + (cy + rad * Math.sin(a)).toFixed(2));
+    }
+    return pts.join(' ');
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('polygon[data-star]'), function(poly){
+    var p = poly.getAttribute('data-star').split(',').map(Number);
+    poly.setAttribute('points', starPoints(p[0], p[1], p[2], p[3], p[4]));
+  });
+  // scattered faint stars behind everything
+  var field = document.getElementById('starfield');
+  var spots = [[6,12,60],[88,8,44],[93,72,74],[10,82,50],[45,94,36],[70,30,30],[25,40,26]];
+  spots.forEach(function(s, i){
+    var svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('viewBox','0 0 100 100');
+    svg.style.left = s[0] + '%';
+    svg.style.top = s[1] + '%';
+    svg.style.width = s[2] + 'px';
+    svg.style.height = s[2] + 'px';
+    var poly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    poly.setAttribute('points', starPoints(50,50,7,48,22));
+    svg.appendChild(poly);
+    field.appendChild(svg);
+  });
+
+  // ----- dots -----
+  slides.forEach(function(s, i){
+    var b = document.createElement('button');
+    b.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+    b.addEventListener('click', function(e){ e.stopPropagation(); go(i, true); });
+    dotsNav.appendChild(b);
+  });
+  var dots = Array.prototype.slice.call(dotsNav.children);
+
+  function frags(i){ return Array.prototype.slice.call(slides[i].querySelectorAll('.frag')); }
+
+  var freezeTimer = null;
+  function armFreeze(){
+    // the bouncing ball freezes on its own a few seconds after its slide appears
+    clearTimeout(freezeTimer);
+    var stage = document.getElementById('ballStage');
+    if (!stage || stage.classList.contains('held')) return;
+    if (slides[cur].id !== 's-into6') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches){ stage.classList.add('held'); return; }
+    freezeTimer = setTimeout(function(){ stage.classList.add('held'); }, 3500);
+  }
+
+  function render(){
+    slides.forEach(function(s, i){
+      s.classList.toggle('active', i === cur);
+      s.classList.toggle('before', i < cur);
+    });
+    dots.forEach(function(d, i){ d.classList.toggle('on', i === cur); });
+    counter.textContent = (cur + 1) + ' / ' + slides.length;
+    progress.style.width = ((cur) / (slides.length - 1) * 100) + '%';
+    armFreeze();
+  }
+
+  function go(i, revealAll){
+    if (i < 0 || i >= slides.length) return;
+    if (revealAll || i < cur){
+      frags(i).forEach(function(f){ f.classList.add('on'); });
+    }
+    cur = i;
+    render();
+  }
+
+  function next(){
+    var pending = frags(cur).filter(function(f){ return !f.classList.contains('on'); });
+    if (pending.length){ pending[0].classList.add('on'); return; }
+    go(cur + 1);
+  }
+  function prev(){
+    var shown = frags(cur).filter(function(f){ return f.classList.contains('on'); });
+    if (shown.length){ shown[shown.length - 1].classList.remove('on'); return; }
+    go(cur - 1, true);
+  }
+
+  document.getElementById('btnNext').addEventListener('click', function(e){ e.stopPropagation(); next(); });
+  document.getElementById('btnPrev').addEventListener('click', function(e){ e.stopPropagation(); prev(); });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown'){ e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp'){ e.preventDefault(); prev(); }
+    else if (e.key === 'Home'){ e.preventDefault(); go(0, true); }
+    else if (e.key === 'End'){ e.preventDefault(); go(slides.length - 1, true); }
+  });
+
+  // click anywhere advances (but not on interactive elements)
+  document.getElementById('deck').addEventListener('click', function(e){
+    if (e.target.closest('[data-noadv], button, a')) return;
+    next();
+  });
+
+  // flip cards
+  Array.prototype.forEach.call(document.querySelectorAll('.qc button'), function(btn){
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      btn.parentElement.classList.toggle('flipped');
+    });
+  });
+
+  // touch swipe
+  var tx = null;
+  document.addEventListener('touchstart', function(e){ tx = e.changedTouches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if (tx === null) return;
+    var dx = e.changedTouches[0].clientX - tx;
+    tx = null;
+    if (Math.abs(dx) < 50) return;
+    if (dx < 0) next(); else prev();
+  }, {passive:true});
+
+  render();
+})();
+</script>
