@@ -171,6 +171,31 @@
   }
   .callout strong{color:var(--gold);}
 
+  /* ---------- schedule table ---------- */
+  .sched{
+    margin:clamp(8px,1.5vh,14px) 0 0;
+    max-width:680px;
+    border-radius:12px; overflow:hidden;
+    box-shadow:0 8px 22px rgba(0,0,0,.22);
+    font-variant-numeric:tabular-nums;
+  }
+  .srow{
+    display:grid; grid-template-columns:1.1fr 1.5fr .7fr;
+    align-items:center; gap:8px;
+    background:var(--paper); color:var(--ink);
+    padding:8px 16px;
+    font-weight:600; font-size:clamp(.75rem, 1.7vw, .95rem);
+  }
+  .srow + .srow{border-top:1.5px solid #e3e8e2;}
+  .srow .dur{text-align:right; color:var(--ink-soft);}
+  .srow.crew{background:#fdf3d3;}
+  .srow.trans{background:#dfe7ea; font-style:italic; color:#4a5f6a;}
+  .srow.none{
+    background:var(--gold); color:var(--green-ink);
+    font-weight:800;
+  }
+  .srow.none .dur{color:var(--green-ink); font-weight:800;}
+
   /* ---------- do/don't panels + rule strips ---------- */
   .duo{display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:14px; margin-top:clamp(8px,2vh,16px);}
   .panel{background:var(--paper); color:var(--ink); border-radius:14px; padding:16px 18px; box-shadow:0 8px 22px rgba(0,0,0,.22);}
@@ -367,14 +392,21 @@
     <div class="wrap">
       <p class="eyebrow">The Big Picture</p>
       <h2>Your afternoon, <span class="gold">stop by stop</span></h2>
-      <p class="lead" style="margin-bottom:clamp(10px,2vh,18px);">A transition is the few minutes you get to move from one place to the next. Your afternoon has <strong>two</strong>: into crew, and into 6th period.</p>
+      <p class="lead" style="margin-bottom:clamp(8px,1.5vh,14px);">Here's the afternoon schedule — look at what's <strong>missing</strong>:</p>
+      <div class="sched">
+        <div class="srow"><span>5th Period</span><span>1:20 – 2:20</span><span class="dur">60 min</span></div>
+        <div class="srow none"><span>No transition</span><span>Crew starts the second 5th ends</span><span class="dur">0 min</span></div>
+        <div class="srow crew"><span>Crew</span><span>2:20 – 2:35</span><span class="dur">15 min</span></div>
+        <div class="srow trans"><span>Transition</span><span>2:35 – 2:40</span><span class="dur">5 min</span></div>
+        <div class="srow"><span>6th Period</span><span>2:40 – 3:40</span><span class="dur">60 min</span></div>
+      </div>
       <div class="timeline">
-        <div class="stop"><span class="n">1</span><h3>Class ends</h3><p>Class gets out. Your 2 minutes to get to crew start now.</p></div>
+        <div class="stop"><span class="n">1</span><h3>Class ends</h3><p>5th ends at 2:20 — and crew starts at 2:20. Start walking right away.</p></div>
         <div class="stop"><span class="n">2</span><h3>Straight to crew</h3><p>No stops, no detours. Go right to your crew and check in.</p></div>
-        <div class="stop"><span class="n">3</span><h3>Crew outside</h3><p>Everyone checked in? Your crew heads outside — before the transition bell rings.</p></div>
+        <div class="stop"><span class="n">3</span><h3>Crew outside</h3><p>Everyone checked in? Your crew heads outside. Faster check-in = more recess.</p></div>
         <div class="stop gold-card"><span class="n">4</span><h3>Crew recess</h3><p>Your time: friends, water, bathroom, talking to teachers.</p></div>
-        <div class="stop"><span class="n">5</span><h3>Straight to 6th</h3><p>Recess ends and everything stops. Walk straight to 6th period.</p></div>
-        <div class="stop"><span class="n">6</span><h3>Ready to go</h3><p>In your seat, materials out, before the 6th-period bell rings.</p></div>
+        <div class="stop"><span class="n">5</span><h3>Straight to 6th</h3><p>Recess ends at 2:35 and everything stops. You get 5 minutes to walk to 6th.</p></div>
+        <div class="stop"><span class="n">6</span><h3>Ready to go</h3><p>In your seat, materials out, before the 2:40 bell rings.</p></div>
       </div>
     </div>
   </section>
@@ -402,9 +434,9 @@
           </ul>
         </div>
       </div>
-      <div class="strip deadline">The deadline: you have <strong>2 minutes</strong>. Before the <strong>transition bell</strong> rings, every crew member is checked in and your whole crew is outside.</div>
-      <div class="strip consequence">If even one crew member isn't checked in when the transition bell rings: <strong>no outside recess that day</strong>, and the crew completes a <strong>crew reflection</strong> — talk about what went wrong, make a plan to fix it.</div>
-      <div class="callout">The longer you take to get there, the more recess time you take from <strong>your crew</strong>.</div>
+      <div class="strip deadline">There is <strong>no transition time</strong> — crew starts at 2:20 sharp. Check in within <strong>2 minutes</strong>, and get your whole crew outside.</div>
+      <div class="strip consequence">If the crew can't get everyone checked in in time: <strong>no outside recess that day</strong>, and the crew completes a <strong>crew reflection</strong> — talk about what went wrong, make a plan to fix it.</div>
+      <div class="callout">Crew time starts at 2:20 whether you're there or not. The longer you take, the more recess you take from <strong>your crew</strong>.</div>
     </div>
   </section>
 
@@ -419,7 +451,7 @@
         <div class="rule yes"><span class="badge">✓</span><div><h3>Get water</h3><p>Drink water and fill your bottle now — no water stops on the way to 6th period.</p></div></div>
         <div class="rule yes"><span class="badge">✓</span><div><h3>Talk to teachers</h3><p>Questions, make-up work, a quick conversation — now's the time.</p></div></div>
       </div>
-      <div class="callout">Hang out <strong>on the blacktop</strong> — you can't hang out in the MS building or the Admin building.</div>
+      <div class="strip consequence" style="margin-top:clamp(14px,3vh,24px);">Hang out <strong>on the blacktop</strong> — <strong style="color:var(--no-red);">you can't hang out in the MS building or the Admin building.</strong></div>
       <div class="callout">All the things you <strong>can't</strong> do during transitions? Recess is exactly when you do them.</div>
     </div>
   </section>
@@ -429,7 +461,7 @@
     <div class="wrap">
       <p class="eyebrow">Recess Ends · Transition Into 6th Period</p>
       <h2>Everything <span class="gold">stops</span> — walk to 6th</h2>
-      <p class="lead">The moment recess ends: all activity stops and <strong>all balls are held</strong>. A ball bounced during this transition gets <strong>confiscated — a teacher takes it away</strong>.</p>
+      <p class="lead">Recess ends at 2:35, and everything stops: <strong>all balls are held</strong>. A ball bounced during this transition gets <strong>confiscated — a teacher takes it away</strong>. You get 5 minutes to walk to class.</p>
       <div class="ball-stage" id="ballStage" style="height:clamp(90px, 13vh, 130px);">
         <span class="ball" aria-hidden="true">🏀</span>
         <span class="play-tag">During recess: play all you want</span>
@@ -477,12 +509,12 @@
       <h2>Did they <span class="gold">get it right?</span></h2>
       <div class="qc-grid">
         <div class="qc"><button type="button" data-noadv>
-          <span class="face front"><span class="scenario">Class gets out and transition starts. Jayden walks his friend to her crew first, <em>then</em> heads to his own.</span><span class="tap">Tap to reveal</span></span>
+          <span class="face front"><span class="scenario">Class gets out at 2:20. Jayden walks his friend to her crew first, <em>then</em> heads to his own.</span><span class="tap">Tap to reveal</span></span>
           <span class="face back nope"><span class="verdict">✗ Nope</span><span class="why">Straight to your own crew — you'll see friends at recess.</span></span>
         </button></div>
         <div class="qc"><button type="button" data-noadv>
-          <span class="face front"><span class="scenario">Maya's whole crew is checked in and outside before the transition bell rings.</span><span class="tap">Tap to reveal</span></span>
-          <span class="face back ok"><span class="verdict">✓ That's it</span><span class="why">That's the goal, exactly. Crew recess: earned.</span></span>
+          <span class="face front"><span class="scenario">Maya's whole crew is checked in and outside within 2 minutes.</span><span class="tap">Tap to reveal</span></span>
+          <span class="face back ok"><span class="verdict">✓ That's it</span><span class="why">That's the goal, exactly — more recess for everyone.</span></span>
         </button></div>
         <div class="qc"><button type="button" data-noadv>
           <span class="face front"><span class="scenario">During crew recess, Andre gets water, uses the bathroom, and talks to his math teacher.</span><span class="tap">Tap to reveal</span></span>
@@ -510,7 +542,7 @@
       <p class="eyebrow">The Takeaway</p>
       <h2>Three things to <span class="gold">remember</span></h2>
       <div class="checks">
-        <div class="check"><span class="badge" style="background:var(--gold); color:var(--green-ink); font-size:1.05rem;">1</span><span><strong>Afternoon Crew transition.</strong> You have 2 minutes — make it before the transition bell, or you don't get to go outside at all.</span></div>
+        <div class="check"><span class="badge" style="background:var(--gold); color:var(--green-ink); font-size:1.05rem;">1</span><span><strong>Getting to crew = no transition time.</strong> Every minute you take is crew time — check in fast, or you don't get to go outside at all.</span></div>
         <div class="check"><span class="badge" style="background:var(--gold); color:var(--green-ink); font-size:1.05rem;">2</span><span><strong>Crew recess = everything else.</strong> Friends, bathroom, water, talking to teachers.</span></div>
         <div class="check"><span class="badge" style="background:var(--gold); color:var(--green-ink); font-size:1.05rem;">3</span><span><strong>6th-period bell = in your seat.</strong> Materials out, done talking — or you're tardy.</span></div>
       </div>
