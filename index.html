@@ -32,15 +32,15 @@
 
   /* ---------- decorative star field ---------- */
   #starfield{position:absolute; inset:0; pointer-events:none; z-index:0;}
-  #starfield svg{position:absolute; opacity:.10;}
+  #starfield svg{position:absolute; opacity:.15;}
   #starfield svg polygon{fill:var(--gold);}
   @keyframes starFloatA{
-    from{transform:translate(0,0) rotate(0deg);}
-    to{transform:translate(3vmin,-4vmin) rotate(22deg);}
+    from{transform:translate(0,0) rotate(0deg) scale(1);}
+    to{transform:translate(14vmin,-11vmin) rotate(140deg) scale(1.25);}
   }
   @keyframes starFloatB{
-    from{transform:translate(0,0) rotate(0deg);}
-    to{transform:translate(-3.5vmin,3vmin) rotate(-18deg);}
+    from{transform:translate(0,0) rotate(0deg) scale(1);}
+    to{transform:translate(-13vmin,10vmin) rotate(-120deg) scale(.8);}
   }
 
   /* ---------- slides ---------- */
@@ -608,7 +608,7 @@
     var poly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
     poly.setAttribute('points', starPoints(50,50,7,48,22));
     svg.appendChild(poly);
-    svg.style.animation = 'starFloat' + (i % 2 ? 'B' : 'A') + ' ' + (20 + i * 3) + 's ease-in-out ' + (-i * 4) + 's infinite alternate';
+    svg.style.animation = 'starFloat' + (i % 2 ? 'B' : 'A') + ' ' + (7 + i * 1.5) + 's ease-in-out ' + (-i * 2) + 's infinite alternate';
     field.appendChild(svg);
   });
 
