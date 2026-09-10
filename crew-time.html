@@ -68,7 +68,7 @@
   .card li::before{content:"✓";color:var(--green);font-weight:800;flex:0 0 auto}
   .card.bad li::before{content:"✗";color:var(--red)}
   .card.gold{background:var(--gold);border-color:var(--gold)}
-  .card.gold h3{color:var(--green-ink)}
+  .card.gold h3{color:var(--green-ink)} .card.gold li{color:var(--green-ink)} .card.gold li::before{color:var(--green-ink)}
 
   /* steps */
   .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:clamp(8px,2vh,16px)}
@@ -156,12 +156,12 @@
   <section class="slide" id="s-today">
     <div class="wrap">
       <p class="eyebrow">Today</p>
-      <h2>Today, <span class="grn">everyone</span> is inside</h2>
-      <p class="lead">Afternoon crew was paused for one day so every crew hears the same expectations. Stay in your crew room with your crew leader. <strong>Afternoon crew resumes tomorrow</strong> with the new schedule.</p>
-      <div class="steps">
-        <div class="step"><span class="n">1</span><h3>Straight to crew</h3><p>5th ends at 2:20. Crew starts at 2:20. Check in right away.</p></div>
-        <div class="step"><span class="n">2</span><h3>Stay in the room</h3><p>Nobody goes outside today. No exceptions.</p></div>
-        <div class="step hl"><span class="n">3</span><h3>Learn the plan</h3><p>Know your grade's day and what to do on the other days.</p></div>
+      <p class="statement">We hit pause.<br><span class="yes">On purpose.</span></p>
+      <p class="lead" style="margin-top:clamp(14px,3vh,26px)">Afternoon crew was paused for one day. Not as a punishment. Because PM Crew matters, and it wasn't working the way it should. Today every crew is inside, hearing the same thing: <strong>this is a reset, and it starts now.</strong></p>
+      <div class="cards three">
+        <div class="card"><h3>What we're doing</h3><ul><li>Naming what PM Crew is for</li><li>Setting a schedule everyone can follow</li></ul></div>
+        <div class="card"><h3>What we expect</h3><ul><li>Listen like it's new, because it is</li><li>Know your day and your room before you leave</li></ul></div>
+        <div class="card gold"><h3>What comes next</h3><ul><li>PM Crew resumes tomorrow</li><li>We run it the right way, every day</li></ul></div>
       </div>
     </div>
   </section>
